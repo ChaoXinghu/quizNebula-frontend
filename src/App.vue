@@ -1,30 +1,33 @@
+//多套布局
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <template v-if="route.path.startsWith('/user')">
+    <UserLayout/>
+  </template>
+  <template v-else>
+    <BasicLayout/>
+  </template>
 </template>
+<script setup lang="ts">
+import BasicLayout from "./layouts/BasicLayout.vue";
+import UserLayout from "./layouts/UserLayout.vue";
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+import {useRoute} from "vue-router";
+import {getLoginUserUsingGet} from "@/api/userController";
+import {useLoginUserStore} from "@/store/userStore";
+import {onMounted} from "vue";
 
-nav {
-  padding: 30px;
-}
+const route = useRoute(); //获取当前路由信息
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+const loginUserStore = useLoginUserStore();
+loginUserStore.fetchLoginUser();
 
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+const doInit = () => {
+  console.log("欢迎使用");
+};
+
+onMounted(() => {
+  doInit();
+});
+</script>
+
+<style scoped></style>
